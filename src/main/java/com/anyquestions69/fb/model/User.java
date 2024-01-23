@@ -16,7 +16,7 @@ public class User {
     private String password;
 
     @Column(name= "admin")
-    private boolean admin=false;
+    private boolean admin;
 
     public User() {
 
@@ -39,7 +39,9 @@ public class User {
         this.email = email;
     }
 
-
+    public String getPassword(){
+        return password;
+    }
 
     @Override
     public String toString() {

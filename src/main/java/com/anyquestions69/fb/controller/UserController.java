@@ -1,8 +1,68 @@
 package com.anyquestions69.fb.controller;
 
-import org.springframework.web.bind.annotation.RestController;
+import com.anyquestions69.fb.model.User;
+import com.anyquestions69.fb.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @RestController
+@RequestMapping("/api/user")
 public class UserController {
+    @Autowired
+    UserRepository userRepository ;
+    @GetMapping("")
+    public ResponseEntity<List<User>> getAllUsers(@RequestParam(required = false)String order) {
+        try {
+            List<User> users = new ArrayList<User>();
+            userRepository.findAll().forEach(users::add);
+            if (users.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(users, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
+    @PostMapping("/register")
+    public ResponseEntity<User> createUser(@RequestBody User user){
+        try{
+            User _user = userRepository.save(new User(user.getEmail(), user.getPassword()));
+            return new ResponseEntity<>(_user, HttpStatus.CREATED);
+        }catch(Exception e){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody User user){
+        try{
+            User _user = userRepository.findOneByEmail(user.getEmail());
+            if(Objects.equals(_user.getPassword(), user.getPassword())){
+                return new ResponseEntity<>("Successfully logged in", HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>("IncorrectPassword", HttpStatus.UNAUTHORIZED);
+            }
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable("id") long id){
+        try{
+            Optional<User> user = userRepository.findById(id);
+            return user.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
