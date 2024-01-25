@@ -65,4 +65,27 @@ public class UserController {
             throw new RuntimeException(e);
         }
     }
+    @PutMapping("/{id}")
+    public ResponseEntity<User> editUser(@RequestBody User user){
+        try {
+            Optional<User> _userData = userRepository.findByEmail(user.getEmail());
+            if(_userData.isPresent()){
+                User _user = _userData.get();
+                if(!user.getPassword().isEmpty()) {
+                    _user.setPassword(user.getEmail());
+                }
+                if(!user.getEmail().isEmpty()) {
+                    _user.setEmail(user.getEmail());
+                }
+                if(!user.getPassword().isEmpty()) {
+                    _user.setPassword(user.getPassword());
+                }
+                return new ResponseEntity<>(userRepository.save(_user), HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            }
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

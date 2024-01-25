@@ -39,6 +39,10 @@ public class User {
         this.email = email;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getPassword(){
         return password;
     }
