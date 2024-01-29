@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,13 +15,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-@RestController
+@Controller
 @RequestMapping("/users")
 public class UserController {
     @Autowired
     UserRepository userRepository ;
-    @GetMapping("")
-    public String greeting(Model model) {
+    @GetMapping("/")
+    public String users(Model model) {
         List<User> users = userRepository.findAll();
         model.addAttribute("users", users);
         return "users";
