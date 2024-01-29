@@ -18,9 +18,7 @@ public class User {
     @Column(name= "admin")
     private boolean admin;
 
-    public User() {
 
-    }
 
     public User(String email, String password) {
         this.email = email;

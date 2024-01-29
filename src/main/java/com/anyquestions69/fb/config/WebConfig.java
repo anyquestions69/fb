@@ -12,17 +12,18 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig {
+public class WebConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/", "/home").permitAll()
+                        .requestMatchers("/", "/users", "/index").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
                         .loginPage("/login")
+                        .defaultSuccessUrl("/users")
                         .permitAll()
                 )
                 .logout((logout) -> logout.permitAll());
@@ -36,6 +37,7 @@ public class WebSecurityConfig {
                 User.withDefaultPasswordEncoder()
                         .username("user")
                         .password("password")
+                        .roles("USER")
                         .build();
 
         return new InMemoryUserDetailsManager(user);

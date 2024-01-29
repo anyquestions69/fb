@@ -1,19 +1,15 @@
 package com.anyquestions69.fb.controller;
 
-import com.anyquestions69.fb.model.User;
-import com.anyquestions69.fb.repository.UserRepository;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.ui.Model;
 
-import java.util.Map;
 
-public class ViewController {
-    UserRepository userRepository;
-    @GetMapping("/index")
-    public String main(Map<String, Object> model) {
-        Iterable<User> users = userRepository.findAll();
+@Controller
+public class ViewController  {
 
-        model.put("users", users);
 
-        return "index ";
-    }
+
 }
